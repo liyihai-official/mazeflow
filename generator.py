@@ -1,6 +1,7 @@
 from random import randint
 from numpy import zeros, abs, maximum
 from noise import pnoise2  # You may need to import the pnoise2 function from the noise module
+from mazepy.lib import load_maze
 
 
 class Generator():
@@ -38,26 +39,40 @@ class Generator():
         self.wall_map[self.start] = 0
         self.wall_map[self.goal] = 0
 
-        # print(self.wall_map)
         return self.wall_map
 
-    def print(self):
-        print()
+    def print(self, contents):
+        print(contents)
 
-
-    def save(self, filename):
-        with open(filename, 'w') as file:
-            for i, row in enumerate(self.wall_map):
-                for j, col in enumerate(row):
-                    if (i, j) == self.goal:
-                        file.write("B ")
-                    elif (i, j) == self.start:
-                        file.write("A ")
-                    elif col:
-                        file.write(f"# ")
-                    else:
-                        file.write(f"  ")
-                file.write('\n')
+    def save(self, filename=None, save=False):
+        contents = []
+        for i, row in enumerate(self.wall_map):
+            row_ = []
+            for j, col in enumerate(row):
+                if (i, j) == self.goal:
+                    row_.append("B")
+                elif (i, j) == self.start:
+                    row_.append("A")
+                elif col:
+                    row_.append("#")
+                else:
+                    row_.append(" ")
+            contents.append(row_)
+    
+        if save:
+            with open(filename, 'w') as file:
+                for i, row in enumerate(self.wall_map):
+                    for j, col in enumerate(row):
+                        if (i, j) == self.goal:
+                            file.write("B")
+                        elif (i, j) == self.start:
+                            file.write("A")
+                        elif col:
+                            file.write(f"#")
+                        else:
+                            file.write(f" ")
+                    file.write('\n')
+        return contents
                 
     def plot(self, filename):
         from PIL import Image, ImageDraw
@@ -104,3 +119,7 @@ class Generator():
                 )
 
         img.save(filename)
+
+
+    
+

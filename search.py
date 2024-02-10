@@ -5,27 +5,27 @@ class Node():
         self.action = action
 
 class Maze():
-    def __init__(self, contents, start, goal):
-
-        self.height, self.width = contents.shape
-
-        self.start = start 
-        self.goal = goal
+    def __init__(self, contents):
         
+        self.height = len(contents)
+        self.width = max(len(line) for line in contents)
+
         # Keep track of walls
         self.walls = []
         for i in range(self.height):
             row = []
             for j in range(self.width):
                 try:
-                    if (i,j) == self.start:
+                    if contents[i][j] == "A":
+                        self.start = (i, j)
                         row.append(False)
-                    elif (i, j) == self.goal:
+                    elif contents[i][j] == "B":
+                        self.goal = (i, j)
                         row.append(False)
-                    elif contents[i][j] == 0:
+                    elif contents[i][j] == " ":
                         row.append(False)
                     else:
-                        row.append(True)
+                        row.append(True) # Has Wall
                 except IndexError:
                     row.append(False)
             self.walls.append(row)
@@ -90,6 +90,7 @@ class Maze():
                 raise Exception("no solution")
 
             # Choose a node from the frontier
+
             node = frontier.remove()
             self.num_explored += 1
 
