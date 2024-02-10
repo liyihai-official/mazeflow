@@ -12,9 +12,9 @@ DESCRIPTION = 'Mazes games'
 
 # Setting up
 setup(
-    name="vidstream",
+    name="mazeflow",
     version=VERSION,
-    author="NeuralNine (Florian Dedov)",
+    author="LI Yihai",
     author_email="<parleywong98@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
