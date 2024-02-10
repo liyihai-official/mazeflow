@@ -1,13 +1,16 @@
 from random import randint
 from numpy import zeros, abs, maximum
-from noise import pnoise2  # You may need to import the pnoise2 function from the noise module
-from mazepy.lib import load_maze
+from noise import pnoise2 
+from mazeflow.lib import load_maze
 
 
-class Generator():
-    def __init__(self, width, height, start, goal):
-        self.width = width
-        self.height = height
+# class Shape2D():
+#     def __init__(self, str: shape) -> None:
+#         pass
+
+class Generator2D():
+    def __init__(self, shape, start, goal):
+        self.height, self.width = shape # [height, width]
 
         self.start = start
         self.goal = goal
@@ -30,11 +33,19 @@ class Generator():
                 noise_map[i][j] = pnoise2(i1, j1)
         abs(noise_map, out=noise_map)
         return noise_map
-    
 
     def generate_walls_array(self, threshold=0.5):
+        
+        def set_outer_to_one(matrix):
+            matrix[0, :] = 1
+            matrix[-1, :] = 1
+            matrix[:, 0] = 1
+            matrix[:, -1] = 1
+            return matrix
+        
         noise_map = self.generate_noise_array()
         self.wall_map[noise_map < threshold] = 1
+        self.wall_map = set_outer_to_one(self.wall_map)
 
         self.wall_map[self.start] = 0
         self.wall_map[self.goal] = 0

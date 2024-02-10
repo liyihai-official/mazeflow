@@ -1,4 +1,4 @@
-import mazepy.lib as lib
+import mazeflow.lib as lib
 
 class StackFrontier():
     """
