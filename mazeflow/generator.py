@@ -4,13 +4,40 @@ from noise import pnoise2
 from mazeflow.lib import load_maze
 
 
-# class Shape2D():
-#     def __init__(self, str: shape) -> None:
-#         pass
+class Shaper2D():
+    def __init__(self, grid, shape) -> None:
+        self.height, self.width = grid.shape
+        self.shape = shape
+        
+        if not isinstance(shape, str):
+            raise TypeError("Shape must be a string")
+        
+        valid_shapes = ["circle", "square", "rectangle", "ring"]  # 假设这是你认可的形状类型列表
+        if shape.lower() not in valid_shapes:
+            raise ValueError(f"Invalid shape type, Valid types: {valid_shapes}")
+        
+    def inside(self, row, col, radius = None, tol = 1e-4):
+        if self.shape == "square" or self.shape == "rectangle":
+            return True
+        elif self.shape == "circle":
+            r2 = (row - self.height/2)**2 + (col - self.width/2)**2
+            
+            if r2 <= radius[0]**2 + tol:
+                return True
+            else:
+                return False
+            j
+        elif self.shape == "ring":
+            r2 = (row - self.height/2)**2 + (col - self.width/2)**2
+            
+            if  r2-radius[0]**2 > tol and r2-radius[1]**2 < tol:
+                return True
+            else:
+                return False
 
 class Generator2D():
-    def __init__(self, shape, start, goal):
-        self.height, self.width = shape # [height, width]
+    def __init__(self, grid_shape, start, goal, maze_shape_info:tuple):
+        self.height, self.width = grid_shape # [height, width]
 
         self.start = start
         self.goal = goal
@@ -18,6 +45,8 @@ class Generator2D():
         self.wall_map = zeros((self.height, self.width), dtype=int)
 
         self.get_big_nums()
+
+        self.shape, self.radius = maze_shape_info
 
     def get_big_nums(self):
         big_num = 2 ** 16
@@ -47,6 +76,14 @@ class Generator2D():
         self.wall_map[noise_map < threshold] = 1
         self.wall_map = set_outer_to_one(self.wall_map)
 
+        Shaper = Shaper2D(self.wall_map, self.shape)
+        for i in range(self.height):
+            for j in range(self.width):
+                if Shaper.inside(i, j, self.radius):
+                    self.wall_map[i][j] = 1
+
+        
+        
         self.wall_map[self.start] = 0
         self.wall_map[self.goal] = 0
 
