@@ -1,5 +1,6 @@
 # Search and MDP iteration Algorithms
-This program including three parts majorly: Generator, Benchmark, Visualization.
+### Authorized by Li Yihai, please contact if you want to use the codes for your project.
+This program includes three parts majorly: Generator, Benchmark, Visualization.
 
 ## Module Requirements: 
 General requirement:
